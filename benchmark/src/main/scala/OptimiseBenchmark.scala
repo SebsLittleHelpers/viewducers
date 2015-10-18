@@ -2,11 +2,20 @@ package com.jsuereth.collections
 
 import org.scalameter.api._
 import View._
+import org.scalameter.picklers.noPickler._
 
 /**
  * Created by jsuereth on 8/16/15.
  */
 object OptimiseBenchmark extends PerformanceTest.Microbenchmark {
+  
+  override def executor = LocalExecutor(
+     this.warmer,
+     Aggregator.min[Double],
+     new Measurer.Default
+   )
+   override def persistor = Persistor.None
+
   // multiple tests can be specified here
   val sizes: Gen[Int] = Gen.range("size")(300000, 1500000, 300000)
   val collection: Gen[Vector[Int]] = sizes.map(r => (0 to r).to[Vector])

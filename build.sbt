@@ -30,8 +30,12 @@ lazy val viewductionJS = viewduction.js
 lazy val benchmarks =
   (project in file("benchmark")).settings(
     name := "viewduction-benchmarks",
-    libraryDependencies += "com.storm-enroute" %% "scalameter" % "0.6",
+    libraryDependencies += "com.storm-enroute" %%% "scalameter" % "0.1-SNAPSHOT",
+    libraryDependencies += "javajs" %%% "javajs" % "0.1-SNAPSHOT",
     testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"),
     logBuffered := false,
-    parallelExecution in Test := false
-  ).settings(commonSettings:_*).dependsOn(viewductionJVM)
+    parallelExecution in Test := false,
+    persistLauncher in Compile := true
+  ).settings(commonSettings:_*).dependsOn(viewductionJS) enablePlugins (
+    ScalaJSPlugin
+  )

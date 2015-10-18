@@ -1,24 +1,23 @@
 package com.jsuereth.collections
 
 import View._
-import org.scalameter.PerformanceTest
 import org.scalameter.api._
 import org.scalameter.reporting.RegressionReporter
+import org.scalameter.picklers.noPickler._
 
 /**
  * Created by jsuereth on 8/16/15.
  */
-object StagedCollectionOpsBenchmark extends PerformanceTest {
-  lazy val executor = LocalExecutor(
-    new Executor.Warmer.Default,
-    Aggregator.min,
+object StagedCollectionOpsBenchmark extends PerformanceTest.Microbenchmark {
+  override lazy val executor = LocalExecutor(
+    this.warmer,
+    Aggregator.min[Double],
     new Measurer.Default)
-  lazy val persistor = Persistor.None
-  lazy val reporter = Reporter.Composite(
-    new RegressionReporter(
+  override lazy val persistor = Persistor.None
+  override lazy val reporter = Reporter.Composite(
+    new RegressionReporter[Double](
       RegressionReporter.Tester.OverlapIntervals(),
-      RegressionReporter.Historian.ExponentialBackoff() ),
-    HtmlReporter(true)
+      RegressionReporter.Historian.ExponentialBackoff() )
   )//ChartReporter(ChartFactory.XYLine())
 
   // multiple tests can be specified here
